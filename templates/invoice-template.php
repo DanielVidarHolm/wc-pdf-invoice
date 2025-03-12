@@ -31,23 +31,22 @@ $billing_email      = $order->get_billing_email();
 $billing_company    = $order->get_billing_company();
 
 // Retrieve shipping details.
-$shipping_fname      = $order->get_shipping_first_name();
-$shipping_lname      = $order->get_shipping_last_name();      
-$shipping_full_name  = $shipping_fname . ' ' . $shipping_lname;
+
 $shipping_address    = $order->get_shipping_address_1();
 $shipping_address2   = $order->get_shipping_address_2();
 $shipping_postcode   = $order->get_shipping_postcode();
 $shipping_city       = $order->get_shipping_city();
-$shipping_phone      = $order->get_shipping_phone();
 $shipping_company    = $order->get_shipping_company();
 
+$shipping_method     = $order->get_shipping_method();
+
 // Retrieve delivery details if available.
-if ( $order->get_meta('shipmondo_pickup_point') ) {
+if ($shipping_method === "PostNord MyPack Collect") {
     $delivery_data   = $order->get_meta('shipmondo_pickup_point');
-    $delivery_name   = $delivery_data['name'];
-    $delivery_address= $delivery_data['address_1'];
-    $delivery_city   = $delivery_data['city'];
-    $delivery_postcode = $delivery_data['postcode'];
+    $shipping_name   = $delivery_data['name'];
+    $shipping_address= $delivery_data['address_1'];
+    $shipping_city   = $delivery_data['city'];
+    $shipping_postcode = $delivery_data['postcode'];
 }
 ?>
 <!DOCTYPE html>
@@ -79,7 +78,12 @@ if ( $order->get_meta('shipmondo_pickup_point') ) {
             border-collapse: collapse;
             width: 100%;
         }
-        .header-table, .address-table, .item-table, .footer-table {
+        .logo-container{
+            display:inline-block;
+            text-align:center;
+        }
+
+        .header-table, .address-table, .item-table, .footer-table, .info-table {
             margin-bottom: 20px;
         }
         /* Header styling */
@@ -94,13 +98,16 @@ if ( $order->get_meta('shipmondo_pickup_point') ) {
             text-align: right;
         }
         /* Store & invoice details */
-        .store-info ul, .address-section ul {
+        .address-section ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .store-info li, .address-section li {
+        .address-section li {
             margin-bottom: 0px
+        }
+        .store-info{
+            margin-top:-10px;
         }
         /* Items table */
         .item-table th, .item-table td {
@@ -143,6 +150,31 @@ if ( $order->get_meta('shipmondo_pickup_point') ) {
         .layout-col > * {
             display: block;
         }
+        .billing{
+            margin-bottom:20px;
+        }
+        .billing > h2{
+            font-weight: bold;
+            font-size:24px;
+            letter-spacing: 20%;
+            border-bottom: 1px solid rgb(73, 73, 73);
+        }
+        .billing-table {
+
+        }
+        .billing-table tr{
+
+        }
+        .billing-table td:first-child{
+            border:0;
+            padding:0;
+        }
+        .billing-table td:last-child{
+            text-align:end;
+            border:0;
+            padding:0;
+            font-weight:bold;
+        }
     </style>
 </head>
 <body>
@@ -151,24 +183,18 @@ if ( $order->get_meta('shipmondo_pickup_point') ) {
         <tr>
             <!-- Invoice details -->
             <td class="header-left">
-                <div class="layout-row">
-                    <h1>Faktura</h1>
-                    <div class="layout-row">
-                        <div class="layout-col">
-                            <p>Faktura nr: <?= esc_html($invoice_number); ?></p>
-                            <p>Faktura dato: <?= esc_html($invoice_date); ?></p>
-                        </div>
-
-                        <div class="layout-col">
-                            <p>Ordre nr: <?= esc_html($order_number); ?></p>
-                            <p>Ordre dato: <?= esc_html($order_date); ?></p>
-                        </div>
-
-
+                <div class="logo-container">
+                    <img src="data:image/png;base64,<?= $logo; ?>" alt="Logo" style="">
+    
+                    <div class="store-info">
+                        
+                        <span><?= esc_html($store_name); ?> - </span>
+                        <span>+45 70 77 77 87 - </span>
+                        <span>CVR: 41956976</span>
+                    
                     </div>
-            
                 </div>
-                <img src="data:image/png;base64,<?= $logo; ?>" alt="Logo" style="margin-left:-25px;">
+              
                 
             </td>
 
@@ -183,50 +209,94 @@ if ( $order->get_meta('shipmondo_pickup_point') ) {
     </table>
 
     <!-- Store Information -->
-    <table class="header-table">
-        <tr>
-            <td>
-                <h2>Firmaoplysninger:</h2>
-                <div class="store-info">
-                    <ul>
-                        <li><?= esc_html($store_name); ?></li>
-                        <li><?= esc_html($store_address); ?></li>
-                        <li><?= esc_html($store_postcode . ' ' . $store_city); ?></li>
-                        <li>+45 70 77 77 87</li>
-                        <li>CVR: 41956976</li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
+    <table class="info-table">
+        <tbody>
+
+            <tr>
+                <!-- Billing Address -->
+                <td class="address-section">
+                    <div class="billing">
+                        <h2>Billing</h2>
+                        <table class="billing-table">
+                            <tr>
+                                <td>Navn:</td>
+                                <td><?= esc_html($billing_full_name); ?></td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td><?= esc_html($billing_address); ?></td>
+                            </tr>
+                            <tr>
+                                <td>By:</td>
+                                <td><?= esc_html($billing_postcode . ' ' . $billing_city); ?></td>
+                            </tr>
+                            <tr>
+                                <td>Telefon:</td>
+                                <td><?= esc_html($billing_phone); ?></td>
+                            </tr>
+                            <tr>
+                                <td>E-mail:</td>
+                                <td><?= esc_html($billing_email); ?></td>
+                            </tr>
+                        </table>
+                            
+                        
+                    </div>
+                    <!-- Shipping -->
+                    <div class="billing">
+                        <h2>Levering</h2>
+                        <table class="billing-table">
+                            <tr>
+                                <td>Metode:</td>
+                                <td><?= esc_html($order->get_shipping_method()); ?></td>
+                            </tr>
+                            <?php if ($shipping_method === "PostNord MyPack Collect") { ?>
+                            <tr>
+                                <td>Navn:</td>
+                                <td><?= esc_html($delivery_name); ?></td>
+                            </tr>
+                            <?php } ?>
+                            <tr>
+                                <td>Address:</td>
+                                <td><?= esc_html($shipping_address); ?></td>
+                            </tr>
+                            <tr>
+                                <td>By:</td>
+                                <td><?= esc_html($shipping_postcode . ' ' . $shipping_city); ?></td>
+                            </tr>
+
+                        </table>
+                            
+                        
+                    </div>
+      
+                    
+                    
+                </td>
+
+                <td>
+                    <h2>Faktura</h2>
+                    <div class="layout-row">                
+                        <p>Faktura nr: <?= esc_html($invoice_number); ?></p>
+                        <p>Faktura dato: <?= esc_html($invoice_date); ?></p>
+                        <p>Ordre nr: <?= esc_html($order_number); ?></p>
+                        <p>Ordre dato: <?= esc_html($order_date); ?></p>
+                    </div>
+                    
+                </td>
+            </tr>
+
+        </tbody>
+        
     </table>
 
     <!-- Addresses Section -->
     <table class="address-table">
         <tr>
-            <!-- Billing Address -->
-            <td class="address-section" style="width: 33%; vertical-align: top;">
-                <h2>Betalingsadresse:</h2>
-                <ul>
-                    <li><?= esc_html($billing_full_name); ?></li>
-                    <?php if ($billing_company) { ?><li><?= esc_html($billing_company); ?></li><?php } ?>
-                    <li><?= esc_html($billing_address); ?></li>
-                    <?php if ($billing_address2) { ?><li><?= esc_html($billing_address2); ?></li><?php } ?>
-                    <li><?= esc_html($billing_postcode . ' ' . $billing_city); ?></li>
-                    <li><?= esc_html($billing_phone); ?></li>
-                    <li><?= esc_html($billing_email); ?></li>
-                </ul>
-            </td>
+            
             <!-- Shipping Address -->
             <td class="address-section" style="width: 33%; vertical-align: top;">
-                <h2>Leveringsadresse:</h2>
-                <ul>
-                    <li><?= esc_html($shipping_full_name); ?></li>
-                    <?php if ($shipping_company) { ?><li><?= esc_html($shipping_company); ?></li><?php } ?>
-                    <li><?= esc_html($shipping_address); ?></li>
-                    <?php if ($shipping_address2) { ?><li><?= esc_html($shipping_address2); ?></li><?php } ?>
-                    <li><?= esc_html($shipping_postcode . ' ' . $shipping_city); ?></li>
-                    <li><?= esc_html($shipping_phone); ?></li>
-                </ul>
+               
             </td>
             <!-- Delivery Address (if available) -->
             <?php if ( isset($delivery_name) && $delivery_name ) { ?>

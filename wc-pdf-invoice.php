@@ -96,8 +96,9 @@ function generate_invoice_html($order, $barcodeBase64, $logoBase64) {
 add_shortcode('wpi_test_invoice', 'wpi_test_invoice_shortcode');
 
 function wpi_test_invoice_shortcode() {
-    // Replace with a valid order ID
-    $order_id =  40954;
+
+    // valid order ID
+    $order_id =  40929;
     $order = wc_get_order($order_id);
     if (!$order) {
         return 'Order not found. Please use a valid order ID.';
@@ -120,8 +121,8 @@ function wpi_test_invoice_shortcode() {
     $order->update_meta_data('wpi_invoice_date',wp_date('j M, Y'));
     $order->save();
 
-    // Get the file path for the attachment with ID 39099.
-    $logo_path = get_attached_file(39099);
+    // logo id 
+    $logo_path = get_attached_file(24643);
 
 
     // Read the image file contents.
@@ -136,6 +137,7 @@ function wpi_test_invoice_shortcode() {
     
     // using function to generate the html
     $html = generate_invoice_html($order, $barcodeBase64, $logo_base64);
+
     // Return the HTML so it renders on the page.
     $dompdf = new Dompdf();
     $dompdf->loadHtml($html);
@@ -148,7 +150,8 @@ function wpi_test_invoice_shortcode() {
     $pdf_url = 'data:application/pdf;base64,' . $pdf_base64;
 
     // Return an anchor that opens the PDF in a new tab.
-    return '<a href="' . $pdf_url . '" target="_blank">Open Invoice PDF in New Tab</a>';
+    // return '<a href="' . $pdf_url . '" target="_blank">Open Invoice PDF in New Tab</a>';
+    return $html;
 }
 
 /**
