@@ -2,7 +2,15 @@
 /**
  * Invoice Template
  */
-
+if(empty($order)){
+    return;
+}
+if(empty($logo)){
+    return;
+}
+if(empty($barcode)){
+    return;
+}
 
 // Retrieve store details.
 $store_address      = get_option('woocommerce_store_address');
@@ -17,6 +25,12 @@ $invoice_date       = $order->get_meta('wpi_invoice_date');
 $order_number       = $order->get_order_number();
 $order_date_temp    = new DateTime($order->get_date_paid());
 $order_date         = $order_date_temp->format('j M, Y');
+$customer_number    = $order->get_customer_id();
+$currency_code      = $order->get_currency();
+$payment_method     = $order->get_payment_method_title();
+$total_with_tax     = $order->get_total();
+$total_tax          = $order->get_total_tax();
+$total_without_tax  = $order->get_total() - $total_tax;
 
 // Retrieve billing details.
 $billing_fname      = $order->get_billing_first_name();
@@ -55,126 +69,7 @@ if ($shipping_method === "PostNord MyPack Collect") {
     <meta charset="utf-8">
     <title>Invoice #<?= esc_html($order_number); ?></title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 28px;
-            line-height:100%;
-            vertical-align:top;
-        }
-        h2 {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-        }
-        p {
-            margin: 2px 0;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .logo-container{
-            display:inline-block;
-            text-align:center;
-        }
-
-        .header-table, .address-table, .item-table, .footer-table, .info-table {
-            margin-bottom: 20px;
-        }
-        /* Header styling */
-        .header-table td {
-            vertical-align: top;
-        }
-        .header-left {
-
-        }
-        .header-right {
-
-            text-align: right;
-        }
-        /* Store & invoice details */
-        .address-section ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .address-section li {
-            margin-bottom: 0px
-        }
-        .store-info{
-            margin-top:-10px;
-        }
-        /* Items table */
-        .item-table th, .item-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        .item-table th {
-            background-color: #f2f2f2;
-        }
-        .item-table td {
-            text-align: left;
-        }
-        .item-table td.numeric {
-            text-align: right;
-        }
-        /* Footer */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 10px;
-            border-top: 1px solid rgb(221, 221, 221);
-            padding-top: 5px;
-        }
-        .small-text {
-            font-size: 10px;
-        }
-        .barcode > img{
-            width:200px;
-            height:auto;
-        }
-        .layout-row > * {
-            display: inline-block;
-        }
-        .layout-row > *:nth-child(n + 2){
-            margin-left:20px;
-        }
-        .layout-col > * {
-            display: block;
-        }
-        .billing{
-            margin-bottom:20px;
-        }
-        .billing > h2{
-            font-weight: bold;
-            font-size:24px;
-            letter-spacing: 20%;
-            border-bottom: 1px solid rgb(73, 73, 73);
-        }
-        .billing-table {
-
-        }
-        .billing-table tr{
-
-        }
-        .billing-table td:first-child{
-            border:0;
-            padding:0;
-        }
-        .billing-table td:last-child{
-            text-align:end;
-            border:0;
-            padding:0;
-            font-weight:bold;
-        }
+        <?php echo file_get_contents(__DIR__ . './../assets/styles.css'); ?>
     </style>
 </head>
 <body>
@@ -215,73 +110,102 @@ if ($shipping_method === "PostNord MyPack Collect") {
             <tr>
                 <!-- Billing Address -->
                 <td class="address-section">
+
                     <div class="billing">
                         <h2>Billing</h2>
                         <table class="billing-table">
                             <tr>
-                                <td>Navn:</td>
-                                <td><?= esc_html($billing_full_name); ?></td>
+                                <td class="key-cell">Navn:</td>
+                                <td class="value-cell"><?= esc_html($billing_full_name); ?></td>
                             </tr>
                             <tr>
-                                <td>Address:</td>
-                                <td><?= esc_html($billing_address); ?></td>
+                                <td class="key-cell">Address:</td>
+                                <td class="value-cell"><?= esc_html($billing_address); ?></td>
                             </tr>
                             <tr>
-                                <td>By:</td>
-                                <td><?= esc_html($billing_postcode . ' ' . $billing_city); ?></td>
+                                <td class="key-cell">By:</td>
+                                <td class="value-cell"><?= esc_html($billing_postcode . ' ' . $billing_city); ?></td>
                             </tr>
                             <tr>
-                                <td>Telefon:</td>
-                                <td><?= esc_html($billing_phone); ?></td>
+                                <td class="key-cell">Telefon:</td>
+                                <td class="value-cell"><?= esc_html($billing_phone); ?></td>
                             </tr>
                             <tr>
-                                <td>E-mail:</td>
-                                <td><?= esc_html($billing_email); ?></td>
+                                <td class="key-cell">E-mail:</td>
+                                <td class="value-cell"><?= esc_html($billing_email); ?></td>
                             </tr>
                         </table>
-                            
-                        
                     </div>
+
                     <!-- Shipping -->
                     <div class="billing">
                         <h2>Levering</h2>
                         <table class="billing-table">
                             <tr>
-                                <td>Metode:</td>
-                                <td><?= esc_html($order->get_shipping_method()); ?></td>
+                                <td class="key-cell">Metode:</td>
+                                <td class="value-cell"><?= esc_html($order->get_shipping_method()); ?></td>
                             </tr>
                             <?php if ($shipping_method === "PostNord MyPack Collect") { ?>
                             <tr>
-                                <td>Navn:</td>
-                                <td><?= esc_html($delivery_name); ?></td>
+                                <td class="key-cell">Navn:</td>
+                                <td class="value-cell"><?= esc_html($shipping_name); ?></td>
                             </tr>
                             <?php } ?>
                             <tr>
-                                <td>Address:</td>
-                                <td><?= esc_html($shipping_address); ?></td>
+                                <td class="key-cell">Address:</td>
+                                <td class="value-cell"><?= esc_html($shipping_address); ?></td>
                             </tr>
                             <tr>
-                                <td>By:</td>
-                                <td><?= esc_html($shipping_postcode . ' ' . $shipping_city); ?></td>
+                                <td class="key-cell">By:</td>
+                                <td class="value-cell"><?= esc_html($shipping_postcode . ' ' . $shipping_city); ?></td>
+                            </tr>
+
+                        </table>
+                    </div>
+
+                </td>
+
+                <td class="faktura-section">
+                    <div class="billing">
+                        <h2>Faktura</h2>
+                        <table class="billing-table">
+                            <?php  ?>
+                            <tr>
+                                <td class="key-cell">Kunde nr:</td>
+                                <td class="value-cell"><?= esc_html($customer_number); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td class="key-cell">Faktura nr:</td>
+                                <td class="value-cell"><?= esc_html($invoice_number); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td class="key-cell">Faktura dato:</td>
+                                <td class="value-cell"><?= esc_html($invoice_date); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="key-cell">Ordre nr:</td>
+                                <td class="value-cell"><?= esc_html($order_number); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="key-cell">Ordre dato:</td>
+                                <td class="value-cell"><?= esc_html($order_date); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="key-cell">Betalingsmetode:</td>
+                                <td class="value-cell"><?= esc_html($payment_method); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="key-cell">Valuta:</td>
+                                <td class="value-cell"><?= esc_html($currency_code); ?></td>
                             </tr>
 
                         </table>
                             
                         
                     </div>
-      
-                    
-                    
-                </td>
 
-                <td>
-                    <h2>Faktura</h2>
-                    <div class="layout-row">                
-                        <p>Faktura nr: <?= esc_html($invoice_number); ?></p>
-                        <p>Faktura dato: <?= esc_html($invoice_date); ?></p>
-                        <p>Ordre nr: <?= esc_html($order_number); ?></p>
-                        <p>Ordre dato: <?= esc_html($order_date); ?></p>
-                    </div>
                     
                 </td>
             </tr>
@@ -290,38 +214,16 @@ if ($shipping_method === "PostNord MyPack Collect") {
         
     </table>
 
-    <!-- Addresses Section -->
-    <table class="address-table">
-        <tr>
-            
-            <!-- Shipping Address -->
-            <td class="address-section" style="width: 33%; vertical-align: top;">
-               
-            </td>
-            <!-- Delivery Address (if available) -->
-            <?php if ( isset($delivery_name) && $delivery_name ) { ?>
-            <td class="address-section" style="width: 34%; vertical-align: top;">
-                <h2>Udleveringssted:</h2>
-                <ul>
-                    <li><?= esc_html($delivery_name); ?></li>
-                    <li><?= esc_html($delivery_address); ?></li>
-                    <li><?= esc_html($delivery_postcode . ' ' . $delivery_city); ?></li>
-                </ul>
-            </td>
-            <?php } ?>
-        </tr>
-    </table>
-
     <!-- Items Table -->
     <table class="item-table">
 
         <thead>
-            <tr>
-                <th>Varenummer</th>
-                <th>Produkt</th>
-                <th style="text-align: right; width:10%;">Antal</th>
-                <th style="text-align: right; width:10%;">Pris</th>
-                <th style="text-align: right; width:20%;">Total pris</th>
+            <tr class="item-table-header-row">
+                <th align="left" class="item-table-header1">Varenummer</th>
+                <th align="left" class="item-table-header2">Produkt</th>
+                <th align="right" class="item-table-header3">Antal</th>
+                <th align="right" class="item-table-header4">Pris</th>
+                <th align="right" class="item-table-header5">Total pris</th>
             </tr>
         </thead>
         <tbody>
@@ -329,43 +231,49 @@ if ($shipping_method === "PostNord MyPack Collect") {
                 $product = $item->get_product();
                 if ( $product ) { ?>
                   
-                    <tr>
-                        <td><?= esc_html($product->get_sku()); ?></td>
-                        <td><?= esc_html($item->get_name()); ?></td>
-                        <td class="numeric"><?= esc_html($item->get_quantity()); ?></td>
-                        <td class="numeric"><?= wc_price($product->get_price()); ?></td>
-                        <td class="numeric"><?= wc_price($item->get_total() + $item->get_subtotal_tax()); ?></td>
+                    <tr class="item-table-row">
+                        <td align="left" class="item-table-cell1"><?= esc_html($product->get_sku()); ?></td>
+                        <td align="left" class="item-table-cell2"><?= esc_html($item->get_name()); ?></td>
+                        <td align="right" class="item-table-cell3"><?= esc_html($item->get_quantity()); ?></td>
+                        <td align="right" class="item-table-cell4"><?= wc_price($product->get_price()); ?></td>
+                        <td align="right" class="item-table-cell5"><?= wc_price($item->get_total() + $item->get_subtotal_tax()); ?></td>
                     </tr>
-               
-                  
 
             <?php }} ?>
-            <tr style="border-top:2px solid rgb(196, 196, 196);">
-                <td style="border:none;" colspan="3"></td>
-                <th style="text-align: right;">SUBTOTAL</th>
-                <td class="numeric"><?= $order->get_subtotal_to_display(); ?> <span class="small-text">(inkl moms)</span></td>
-            </tr>
-            <tr>
-                <td style="border:none;" colspan="3"></td>
-                <th style="text-align: right;">FORSENDELSE</th>
-                <td class="numeric">
-                    <?= wc_price($order->get_shipping_total() + $order->get_shipping_tax()); ?>
-                    <br>
-                    <span class="small-text"><?= esc_html($order->get_shipping_method()); ?></span>
-                </td>
-            </tr>
-            <tr style="border-top:3px solid rgb(138, 138, 138);">
-                <td style="border:none;" colspan="3"></td>
-                <th style="text-align: right;">TOTAL</th>
-                <td class="numeric">
-                    <?= wc_price($order->get_total()); ?>
-                    <br>
-                    <span class="small-text">(inkl moms <?= wc_price($order->get_total_tax()); ?>)</span>
+                    <tr class="item-table-row">
+                        <td align="left" class="item-table-cell1">- - - - - - - - - -</td>
+                        <td align="left" class="item-table-cell2"><?= esc_html($shipping_method); ?></td>
+                        <td align="right" class="item-table-cell3"><?= esc_html('1'); ?></td>
+                        <td align="right" class="item-table-cell4"><?= wc_price($order->get_shipping_total() + $order->get_shipping_tax()); ?></td>
+                        <td align="right" class="item-table-cell5"><?= wc_price($order->get_shipping_total() + $order->get_shipping_tax()); ?></td>
+
+                    </tr>
+
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+            <tr class="total-section">
+                <td></td>
+                <td class="total-table-container">
+                    <table class="total-table">
+                        <tr class="total-row">
+                            <td align="left" class="total-key-cell">Total (uden moms)</td>
+                            <td align="right" class="total-value-cell"><?= wc_price(esc_html($total_without_tax)); ?></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td align="left" class="total-key-cell">Total moms (25%)</td>
+                            <td align="right" class="total-value-cell"><?= wc_price(esc_html($total_tax)); ?></td>
+                        </tr>
+                        <tr class="total-row last-row">
+                            <td align="left" class="total-key-cell">Total (med moms)</td>
+                            <td align="right" class="total-value-cell"><?= wc_price(esc_html($total_with_tax)); ?></td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </tbody>
     </table>
-    <p>Betalingsmetode: <strong><?= esc_html($order->get_payment_method_title()); ?></strong></p>
     <!-- Footer Section -->
     <div class="footer">
         

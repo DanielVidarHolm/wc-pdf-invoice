@@ -1,0 +1,223 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+h1 {
+    font-size: 28px;
+    line-height:100%;
+    vertical-align:top;
+}
+h2 {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+}
+p {
+    margin: 2px 0;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.logo-container{
+    display:inline-block;
+    text-align:center;
+    margin-top: -15px;
+    margin-left: -10px;
+}
+.logo-container > img{
+    width:250px;
+}
+
+.header-table, .address-table, .footer-table, .info-table {
+    margin-bottom: 20px;
+}
+.item-table{
+    margin-bottom: 0;
+}
+/* Header styling */
+.header-table td {
+    vertical-align: top;
+}
+.header-left {
+
+}
+.header-right {
+
+    text-align: right;
+}
+.address-section{
+    padding:0 20px 0 0;
+}
+.faktura-section{
+    padding:0;
+}
+
+/* Store & invoice details */
+.store-info{
+    margin-top:-10px;
+    font-size:10px;
+}
+/* Items table */
+.item-table{
+    width:100%;
+}
+.item-table .item-table-header-row{
+    background-color: #0082fb;
+    border-right:1px solid #0082fb;
+    border-left:1px solid #0082fb;
+}
+.item-table .item-table-header-row > th{
+    color: white;
+    font-size:12px;
+    padding: 8px;
+    vertical-align:center;
+    line-height:100%;
+    border:0;
+}
+.item-table .item-table-header1{
+    width:20%;
+    text-align:start;
+
+}
+.item-table .item-table-header2{
+    width:48%;
+    text-align:start;
+}
+.item-table .item-table-header3{
+    width:10%;
+    text-align:end;
+}
+.item-table .item-table-header4{
+    width:10%;
+    text-align:end;
+}
+.item-table .item-table-header5{
+    width:12%;
+    text-align:end;
+}
+.item-table .item-table-row{
+    border-right:1px solid grey;
+    border-left:1px solid grey;
+}
+.item-table .item-table-row > td{
+    padding:5px;
+    border:0;
+    border-bottom:1px solid grey;
+    font-size:11px;
+    vertical-align:middle;
+}
+.item-table .item-table-cell1{
+    width:20%;
+    text-align:start;
+}
+.item-table .item-table-cell2{
+    width:48%;
+    text-align:start;
+}
+.item-table .item-table-cell3{
+    width:10%;
+    text-align:end;
+    font-weight:bold;
+}
+.item-table .item-table-cell4{
+    width:10%;
+    text-align:end;
+    font-weight:bold;
+}
+.item-table .item-table-cell5{
+    width:12%;
+    text-align:end;
+    font-weight:bold;
+}
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10px;
+    border-top: 1px solid rgb(221, 221, 221);
+    padding-top: 5px;
+}
+.small-text {
+    font-size: 10px;
+}
+.barcode > img{
+    margin-top:10px;
+    width:150px;
+    height:40px;
+}
+.faktura-section{
+    vertical-align:top;
+}
+.billing{
+    margin-bottom:5px;
+}
+.billing > h2{
+    font-weight: bold;
+    font-size:18px;
+    font-family:"Roboto", sans-serif;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+}
+.billing-table {
+    margin-bottom:10px;
+    font-size:12px;
+}
+.billing-table tr{
+}
+.billing-table .key-cell{
+    border:0;
+    padding:0;
+    padding-bottom:2px;
+}
+.billing-table .value-cell{
+    display:block;
+    text-align:right;
+    border:0;
+    padding:0;
+    padding-bottom:2px;
+    font-weight:bold;
+}
+.total-section{
+    width:50%;
+}
+.total-section > td{
+    width:50%;
+}
+.total-table-container{
+    padding:0;
+}
+.total-table{
+    margin-bottom:20px;
+}
+.total-row{
+    width:100%;
+    border-right:1px solid grey;
+    border-left:1px solid grey;
+
+}
+.total-row > td{
+    padding:5px;
+    font-size:11px;
+    border-bottom:1px solid grey;
+}
+.total-row > .total-key-cell{
+    text-align: left;
+}
+.total-row > .total-value-cell{
+    text-align: right;
+    font-weight: bold;
+}
+.total-row.last-row{
+    background-color: #0060ba;
+}
+.total-row.last-row > td{
+    color: white;
+    font-weight:bold;
+}
