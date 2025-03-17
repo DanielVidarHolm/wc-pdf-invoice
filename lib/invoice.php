@@ -78,6 +78,6 @@ function generate_invoice_html($order, $barcodeBase64, $logoBase64) {
     // Make the barcode variable available in the template
     $barcode = $barcodeBase64;
     $logo = $logoBase64;
-    include(PLUGIN_ROOT . '\templates\invoice-template.php');
+    include_once(PLUGIN_ROOT . '/templates/invoice-template.php');
     return ob_get_clean();
 }

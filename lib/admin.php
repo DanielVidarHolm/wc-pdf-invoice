@@ -6,17 +6,17 @@ function wpi_add_invoice_links_to_order( $order ) {
         ?>
         <div class="invoice-links" style="margin-top:20px;">
             <!-- Download Invoice Button -->
-            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" download class="button">
+            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" download class="button" style="margin-top:20px;">
                 Download Invoice
             </a>
 
             <!-- Print Invoice Button -->
-            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" target="_blank" class="button" id="print-invoice">
+            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" target="_blank" class="button" id="print-invoice" style="margin-top:20px;">
                 Print Invoice
             </a>
 
             <!-- View Invoice Button -->
-            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" target="_blank" class="button">
+            <a href="<?php echo esc_url( $invoice_pdf_url ); ?>" target="_blank" class="button" style="margin-top:20px;">
                 View Invoice
             </a>
         </div>
