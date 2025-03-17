@@ -25,7 +25,7 @@ $invoice_date       = $order->get_meta('wpi_invoice_date');
 $order_number       = $order->get_order_number();
 $order_date_temp    = new DateTime($order->get_date_paid());
 $order_date         = $order_date_temp->format('j M, Y');
-$customer_number    = $order->get_customer_id();
+$customer_number    = $order->get_customer_id() ? $order->get_customer_id() : "ikke registreret";
 $currency_code      = $order->get_currency();
 $payment_method     = $order->get_payment_method_title();
 $total_with_tax     = $order->get_total();
@@ -112,14 +112,14 @@ if ($shipping_method === "PostNord MyPack Collect") {
                 <td class="address-section">
 
                     <div class="billing">
-                        <h2>Billing</h2>
+                        <h2>Fakturadetaljer</h2>
                         <table class="billing-table">
                             <tr>
                                 <td class="key-cell">Navn:</td>
                                 <td class="value-cell"><?= esc_html($billing_full_name); ?></td>
                             </tr>
                             <tr>
-                                <td class="key-cell">Address:</td>
+                                <td class="key-cell">Adresse:</td>
                                 <td class="value-cell"><?= esc_html($billing_address); ?></td>
                             </tr>
                             <tr>
@@ -152,7 +152,7 @@ if ($shipping_method === "PostNord MyPack Collect") {
                             </tr>
                             <?php } ?>
                             <tr>
-                                <td class="key-cell">Address:</td>
+                                <td class="key-cell">Adresse:</td>
                                 <td class="value-cell"><?= esc_html($shipping_address); ?></td>
                             </tr>
                             <tr>
@@ -182,7 +182,7 @@ if ($shipping_method === "PostNord MyPack Collect") {
 
                             <tr>
                                 <td class="key-cell">Faktura dato:</td>
-                                <td class="value-cell"><?= esc_html($invoice_date); ?></td>
+                                <td class="value-cell"><?= esc_html(strtolower($invoice_date)); ?></td>
                             </tr>
                             <tr>
                                 <td class="key-cell">Ordre nr:</td>
@@ -190,7 +190,7 @@ if ($shipping_method === "PostNord MyPack Collect") {
                             </tr>
                             <tr>
                                 <td class="key-cell">Ordre dato:</td>
-                                <td class="value-cell"><?= esc_html($order_date); ?></td>
+                                <td class="value-cell"><?= esc_html(strtolower($order_date)); ?></td>
                             </tr>
                             <tr>
                                 <td class="key-cell">Betalingsmetode:</td>
