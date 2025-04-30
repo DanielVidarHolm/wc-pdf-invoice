@@ -16,9 +16,3 @@ include_once(plugin_dir_path(__FILE__) . 'lib/mail.php');
 include_once(plugin_dir_path(__FILE__) . 'lib/admin.php');
 include_once(plugin_dir_path(__FILE__) . 'lib/helpers.php');
 include_once(plugin_dir_path(__FILE__) . 'lib/invoice.php');
-
-
-
-
-
-
