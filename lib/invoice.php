@@ -4,7 +4,7 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 use Dompdf\Dompdf;
 
 // hooking into woocommerce complete order hook
-add_action('woocommerce_order_status_completed', 'wpi_generate_invoice_pdf',10 , 1);
+add_action('woocommerce_order_status_processing', 'wpi_generate_invoice_pdf',10 , 1);
 function wpi_generate_invoice_pdf($order_id){
     // get the order with wc get order method
     $order = wc_get_order($order_id);
@@ -78,6 +78,6 @@ function generate_invoice_html($order, $barcodeBase64, $logoBase64) {
     // Make the barcode variable available in the template
     $barcode = $barcodeBase64;
     $logo = $logoBase64;
-    include(PLUGIN_ROOT . '\templates\invoice-template.php');
+    include_once(PLUGIN_ROOT . '/templates/invoice-template.php');
     return ob_get_clean();
 }

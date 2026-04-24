@@ -7,7 +7,7 @@ add_shortcode('wpi_test_invoice', 'wpi_test_invoice_shortcode');
 function wpi_test_invoice_shortcode() {
 
     // valid order ID
-    $order_id =  40929;
+    $order_id =  42561;
     $order = wc_get_order($order_id);
     if (!$order) {
         return 'Order not found. Please use a valid order ID.';
